@@ -1,0 +1,123 @@
+---
+title: "Themed dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    theme:
+      bg: "#DCD6D4"
+      fg: "#090C3F" 
+      primary: "#0F49C7"
+      base_font:
+        google: Prompt
+      code_font:
+        google: JetBrains Mono
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+# Install thematic and un-comment for themed static plots (i.e., ggplot2)
+# thematic::thematic_rmd()
+library(paqueteMET)                # activar paqueteMET
+```
+
+Column {data-width=550 .tabset}
+-----------------------------------------------------------------------
+
+### tiempos en carrera
+
+```{r }
+#library(readr)
+
+library(ggplot2)
+ggplot(CarreraLuz22, aes(y=edad , x=timerun/60))+   # lienso con escalas 
+geom_point()     # grafico de puntos
+
+
+```
+
+### Hombres en Carrera
+
+```{r}
+datahombres=subset(CarreraLuz22, (CarreraLuz22$sex=="Hombre")) # dataset de Hombres
+
+ggplot(datahombres, aes(x = datahombres$categoria)) +                      #1
+  #geom_bar() +                                             #2
+  geom_bar(width=0.5, colour="red", fill="skyblue") +       #2 
+  
+  labs(x="Sexo",y= "Frecuencia")  +              #3               
+  ylim(c(0,700)) +                               #4
+  #xlim(c(0,300)) +                              #4
+  ggtitle("Diagrama de barras")  +               #5
+  
+  # theme_bw() +                                 #6
+  theme_bw(base_size = 12) +                     #6
+  #coord_flip() +                                #7
+  
+  geom_text(aes(label=..count..), stat='count',  #8
+            position=position_dodge(0.9), 
+            vjust=-0.5, 
+            size=5.0
+            ) + 
+  facet_wrap(~"Variable Sexo")
+```
+
+### Mujeres por categoria
+```{r}
+datamujeres=subset(CarreraLuz22, (CarreraLuz22$sex=="Mujer")) # dataset de mujeres
+
+ggplot(datamujeres, aes(x = datamujeres$categoria)) +                      #1
+  #geom_bar() +                                             #2
+  geom_bar(width=0.5, colour="red", fill="skyblue") +       #2 
+  
+  labs(x="Sexo",y= "Frecuencia")  +              #3               
+  ylim(c(0,700)) +                               #4
+  #xlim(c(0,300)) +                              #4
+  ggtitle("Diagrama de barras")  +               #5
+  
+  # theme_bw() +                                 #6
+  theme_bw(base_size = 12) +                     #6
+  #coord_flip() +                                #7
+  
+  geom_text(aes(label=..count..), stat='count',  #8
+            position=position_dodge(0.9), 
+            vjust=-0.5, 
+            size=5.0
+            ) + 
+  facet_wrap(~"Variable Sexo")
+```
+
+### Màs Informaciòn
+```{r}
+
+```
+
+
+Column {data-width=700.tabset}
+-----------------------------------------------------------------------
+
+### tiempo de mujeres en categoria abierta
+
+```{r}
+dataFc4=subset(CarreraLuz22, (CarreraLuz22$sex=="Mujer" & CarreraLuz22$categoria=="2. Abierta")) # dataset de mujeres
+x=dataFc4$timerun/60
+hist(x, xlim=c(0,140), las=1,
+main = "Distribucion de los tiempos mujeres categoria abierta",
+breaks = seq(0, 140, by = 20),
+xlab="tiempo (min)",
+ylab = "frecuencia",
+col ="#ee964b")
+```
+
+### tiempo de hombres en categoria abierta
+
+```{r}
+dataFc4=subset(CarreraLuz22, (CarreraLuz22$sex=="Hombre" & CarreraLuz22$categoria=="2. Abierta")) # dataset de Hombres
+x=dataFc4$timerun/60
+hist(x, xlim=c(0,140), las=1,
+main = "Distribucion de los tiempos Hombres categoria abierta",
+breaks = seq(0, 140, by = 20),
+xlab="tiempo (min)",
+ylab = "frecuencia",
+col ="#ee964b")
+```
